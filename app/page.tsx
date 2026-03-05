@@ -37,7 +37,42 @@ export default function SalaryCalculator() {
   }, [mainSalary, totalWorkingDays, officeDays, absentDays, daysInMonth]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 sm:p-8 flex items-center justify-center font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 sm:p-8 flex flex-col items-center justify-center font-sans transition-colors duration-200 py-12">
+
+      {/* Header and Rules */}
+      <div className="text-center mb-8 max-w-4xl w-full sm:mt-0">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
+          Betopia Salary Calculator
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+          Calculate your monthly payable salary based on night shifts, office shifts, and absences.
+        </p>
+
+        <details className="w-full text-left bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm [&_summary::-webkit-details-marker]:hidden group transition-colors">
+          <summary className="p-4 sm:p-6 cursor-pointer font-semibold text-lg list-none flex justify-between items-center text-gray-800 dark:text-gray-200 select-none">
+            <span>How is the salary calculated? (Rules breakdown)</span>
+            <span className="transition duration-300 group-open:rotate-180 text-gray-500 dark:text-gray-400">
+              <svg fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div className="p-4 sm:p-6 pt-0 border-t border-gray-100 dark:border-gray-800 text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed">
+            <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Calculation Breakdown:</h3>
+            <ul className="list-disc pl-5 space-y-2 mb-4">
+              <li><strong>Night Allowance (d):</strong> A pool is created by taking 20% of half your Base Salary. This pool is divided by the total days in the month to get a per-day night allowance (c). You earn this for each shift worked (including WFH).</li>
+              <li><strong>Dinner Allowance (e):</strong> You receive a flat allowance of <span className="font-semibold text-gray-800 dark:text-gray-300">100 tk</span> for every shift you work from the office.</li>
+              <li><strong>Subtotal (f):</strong> Base Salary + Night Allowance + Dinner Allowance.</li>
+              <li><strong>Absent Deduction:</strong> For every absent shift, one full day's base salary (Base Salary ÷ Days in Month) is deducted.</li>
+            </ul>
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 font-mono text-xs sm:text-sm">
+              <p className="mb-1"><strong>Allowance Pool:</strong> (Salary / 2) × 0.20</p>
+              <p className="mb-1"><strong>Per-day Night Allowance (c):</strong> Pool / Days in Month</p>
+              <p className="text-blue-600 dark:text-blue-400 mt-2 font-semibold">Total Payable = Subtotal - Total Absent Deductions</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      {/* Main Calculator Card */}
       <div className="max-w-4xl w-full bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-transparent dark:border-gray-800">
 
         {/* Input Section */}
@@ -66,17 +101,17 @@ export default function SalaryCalculator() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">Total Working Days (inc. WFH)</label>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">Total Night Shifts (inc. WFH)</label>
               <input type="number" value={totalWorkingDays} onChange={(e) => setTotalWorkingDays(Number(e.target.value))} className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 dark:text-gray-100 transition-colors" placeholder="e.g. 22" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">Total Office Days</label>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">Total Office Shifts</label>
               <input type="number" value={officeDays} onChange={(e) => setOfficeDays(Number(e.target.value))} className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 dark:text-gray-100 transition-colors" placeholder="e.g. 10" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">Absent Days</label>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1.5">Absent Shifts</label>
               <input type="number" value={absentDays} onChange={(e) => setAbsentDays(Number(e.target.value))} className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 dark:text-gray-100 transition-colors" placeholder="e.g. 2" />
             </div>
           </div>
@@ -92,11 +127,11 @@ export default function SalaryCalculator() {
                 <span className="font-semibold text-white">{daysInMonth} days</span>
               </div>
               <div className="flex justify-between border-b border-blue-500 dark:border-blue-600 pb-2">
-                <span>Working Day Allowance (d):</span>
+                <span>Night Allowance (d):</span>
                 <span className="font-semibold text-white">+{calculations.d.toFixed(2)}</span>
               </div>
               <div className="flex justify-between border-b border-blue-500 dark:border-blue-600 pb-2">
-                <span>Office Day Bonus (e):</span>
+                <span>Dinner Allowance (e):</span>
                 <span className="font-semibold text-white">+{calculations.e.toFixed(2)}</span>
               </div>
               <div className="flex justify-between border-b border-blue-500 dark:border-blue-600 pb-2">
